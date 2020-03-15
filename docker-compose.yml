@@ -1,0 +1,18 @@
+version: '2.0'
+services:
+  opc:
+    #image: mcr.microsoft.com/iotedge/opc-plc:1.0
+    build: opc-plc
+    ports:
+    - "50000:50000"
+
+  influx:
+    image: influxdb:1.7-alpine
+    ports:
+    - "8086:8086"
+
+  opc-to-influx:
+    build: node-opcua-logger-docker
+    environment:
+        OPC_SERVER: opc.tcp://opc
+        INFLUX_SERVER: http://user:password@influx:8086/opcua
